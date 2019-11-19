@@ -1,10 +1,3 @@
-/*
- * Purpose is to Run an YDLidar X2 Lidar using the serial pin and a relay through an Arduino
- * This closes relay, gathers data from the lidar, opens the relay 
- * then sorts then maps the data recieved.
- * This is then repeated as necessary
- */
-
 const int DATASIZE = 100;
 int i = 0;
 int array[360][2];
@@ -15,7 +8,6 @@ int array[360][2];
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-  //Create a connection with the relay module
 
 }
 
@@ -31,27 +23,17 @@ void loop() {
   }
  }
 }
-////////////////////////////////////////////////////////
-/*
- * Sorting Function will consist of 
- * "INPUT_SIZE" amount of Bytes, with the 
- * first 2 Bytes denoting the beginning of the scan command (0xA55A)
- * Then find the First Packet head 0x55AA, 
- * then stepping through to gather the distant points from the point cloud
- */
-////////////////////////////////////////////////////////
+
 /* To use this loop() coment out the top loop and remove the comment here
  * ----------------------------------------------------------------------------
  *
-const int INPUT_SIZE = 2000; //Amount of bytes that will be sorted each time the relay is triggered
+int INPUT_SIZE = 2000;
 int storage[INPUT_SIZE];
 bool processing = 0;
-
 
 void loop() {
   while (!processing)
   {
-    //Trigger the Relay Remove the serial availabe, once relay is triggered start storing data
     if(Serial.available())
     {
      for(int j = 0; j < INPUT_SIZE; j++)
@@ -76,3 +58,30 @@ void loop() {
   }
 }
 */
+
+// Intermediate Angles Function Header
+void intangles(samplerate);
+// Intermediate Angles Function Definition
+samplerate = 40;
+void intangles(samplerate)
+{
+  int angle[x];
+
+  for(i=2; i<x; i++)
+  {
+    angle[i] = (((LSA-FSA)/(x-1))*(i-1)+FSA);
+  }
+  return;
+}
+
+// Calculate Angle Function Header (From LSB and MSB)
+int angle(x);
+// Calculate Angle Function Definition (From LSB and MSB)
+int angle(x)
+{
+  x >> 1;
+  x = x/64;
+  return x;
+}
+
+}
