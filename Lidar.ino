@@ -5,11 +5,11 @@
  * This is then repeated as necessary
  */
 
-const int DATASIZE = 100;
+//const int DATASIZE = 100;
 int i = 0;
-int array[360][2];
+//int array[360][2];
 
-void intangles(); // Intermediate Angle Function Definition
+void intangles(int x); // Intermediate Angle Function Definition
 int angle(int x); // Angle Function Definition
 int math(int a, int b);
 
@@ -54,12 +54,10 @@ void loop() {
 /* To use this loop() coment out the top loop and remove the comment here
  * ----------------------------------------------------------------------------
  */
-const int INPUT_SIZE = 2000; //Amount of bytes that will be sorted each time the relay is triggered
+ //max size for "input is 750" due to memory size of UNO, due to change because of addition of new functions
+const int INPUT_SIZE = 500; //Amount of bytes that will be sorted each time the relay is triggered
 int storage[INPUT_SIZE];
 bool processing = 0;
-//int sample_rate = 0;
-//int Start = 0;
-//int End = 0;
 
 void loop() {
   while (!processing)
@@ -85,8 +83,33 @@ void loop() {
   }
   while(processing)
   {
-    
-    //This is where the processing code to "sort" the data through the array
+    int sample_rate = 0;
+    int Start = 0;
+    int End = 0;
+    int sorting[500][2];//used to store the distances assigned to there angle
+    int angle[500];//used to store intermediate angles
+    for(int j=8; j<INPUT_SIZE; j++) //J is 8 because in the first 7 Bytes only the first 2 are important
+    {
+      if(storage[j] == 0xAA && storage[j+1] == 0x55)
+      {
+        j+=3; //walks to the LSN
+        sample_rate=storage[j];
+        j++; //walks to the FSA
+        Start = math(storage[j], storage[j+1]);
+        j+=2;//walks to the LSA
+        End = math(storage[j], storage[j+1]);
+        j+=4;//walks to the first sample data
+        for(int i=2; i<sample_rate; i++)
+        {
+          angle[i] = (((End-Start)/(sample_rate-1))*(i-1)+Start);
+        }
+      }
+      else
+      {
+        Serial.print("Start doing sorting here");
+      }
+    }
+      //This is where the processing code to "sort" the data through the array
   }
 }
 
@@ -97,13 +120,9 @@ void loop() {
 //Post: Returns nothing but fills in array with intermediate angles
 //Future: Probably will merge into main loop() function, Need to inclu
 //////////////////////////////////////////////////////////////////////////////
-//void intangles()
+//void intangles(int x)
 //{
-//  int x = sample_rate;
-  //for(int i=2; i<x; i++)
-  //{
-//    angle[i] = (((End-Start)/(x-1))*(i-1)+Start);
- // }
+
   //return;
 //}
 
